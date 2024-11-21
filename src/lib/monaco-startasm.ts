@@ -7,50 +7,50 @@ export function registerStartASMLanguage() {
         tokenizer: {
             root: [
                 // Instructions
-                [/\b(move|load|store|create|cast|add|sub|multiply|divide|or|and|not|shit|compare|jump|call|push|pop|return|stop|input|output|print)\b/, 'keyword.instruction'],
+                [/\b(move|load|store|create|cast|add|sub|multiply|divide|or|and|not|shift|compare|jump|call|push|pop|return|input|output|print)\b/, 'keyword.instruction'],
 
                 // Registers
-                [/\b(r[0-9]+)\b/, 'variable'],
+                [/\b(r[0-9]+|register|sp)\b/, 'variable'],
 
                 // Types
-                [/\b(integer|boolean|character|memory)\b/, 'variable'],
+                [/\b(boolean|true|false)\b/, 'boolean'],
 
                 // Numbers
                 [/\b\d+\b/, 'number'],
+                [/\b(integer)\b/, 'number'],
 
                 // Hex
                 [/\b0[xX][0-9a-fA-F]+\b/, 'number.hex'],
 
                 // Characters
-                [/'.'/, 'character'],
+                [/'(?:\\.|[^'])'/, 'character'],
 
                 // Strings
                 [/".*?"/, 'string'],
                 [/\b(newline)\b/, 'keyword.string'],
 
-                // Labels
-                [/\blabel\s+'[^']*'/, 'function'],
-
-                // Calls
-                [/\bcall\s+'[^']*'/, 'function'],
+                // Label Matching
+                [/'[^']*'/, 'label'], // Matches any label-like token (e.g., 'xyz')
+                [/\b(label)\b/, 'label'],
 
                 // Comments
                 [/\bcomment\s+"[^"]*"/, 'comment'],
 
                 // Memory Literals
-                [/m<\d+>/, 'literal.memory'],
+                [/(m<\d+>|memory)/, 'literal.memory'],
 
                 // Instruction Literals
-                [/i\[\d+]/, 'literal.instruction'],
+                [/(i\[\d+\]|instruction)/, 'literal.instruction'],
 
                 // Conjunctions
                 [/\b(from)\b/, 'keyword.conjunctionSrc'],
                 [/\b(to)\b/, 'keyword.conjunctionDest'],
-                [/\b(with)\b/, 'keyword.conjunctionOpr'],
+                [/\b(with|by)\b/, 'keyword.conjunctionOpr'],
                 [/\b(if|unconditional|greater|less|equal|unequal|zero|nonzero|positive|negative|overflow|nonoverflow)\b/, 'keyword.conjunctionCond'],
                 [/\b(left|right)\b/, 'keyword.conjunctionAttr'],
 
-
+                // Stop
+                [/\b(stop)\b/, 'keyword.stop'],
             ],
         },
     });
