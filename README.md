@@ -6,11 +6,9 @@ StartIDE is the all-in-one editor and development environment for the StartASM l
 This project leverages Svelte, TypeScript, and Tauri to provide a fast and cross-platform experience.
 
 ## Features
-- Syntax highlighting tailored for StartASM programs
-- Lightweight and responsive user interface
+- Syntax highlighting for StartASM programs
 - Cross-platform compatibility (macOS, Linux, Windows)
-- Integration with the StartASM compiler and runtime
-- Easy-to-use installation process
+- Integration with the StartASM Compiler and Ignition
 
 ## Prerequisites
 To build and run StartIDE, you'll need:
