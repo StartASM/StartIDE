@@ -21,36 +21,36 @@ To build and run StartIDE, you'll need:
   - On macOS: Ensure `Xcode` is installed with its command-line tools.
   - On Debian/Ubuntu: Install the necessary libraries:
     ```bash
-            sudo apt update
-            sudo apt install libwebkit2gtk-4.0-dev build-essential libssl-dev
-            ```
+    sudo apt update
+    sudo apt install libwebkit2gtk-4.0-dev build-essential libssl-dev
+    ```
 
 ## Installation
 Follow these steps to get started:
 
 1. **Clone the Repository**:
    ```bash
-           git clone https://github.com/yourusername/StartIDE.git
-           cd StartIDE
-           ```
+    git clone https://github.com/StartASM/StartIDE.git
+    cd StartIDE
+   ```
 
 2. **Install Dependencies**:
    Run the following command to install the required Node.js packages:
    ```bash
-           npm install
-           ```
+   npm install
+   ```
 
 3. **Run the Development Server**:
    Start the development server and launch the Tauri app:
    ```bash
-           npm run tauri dev
-           ```
+   npm run tauri dev
+   ```
 
 4. **Build the Production Version**:
    To create a production build, run:
    ```bash
-           npm run tauri build
-           ```
+   npm run tauri build
+   ```
    The compiled app will be located in the `src-tauri/target` directory.
 
 ## Usage
