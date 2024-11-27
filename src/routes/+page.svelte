@@ -4,6 +4,7 @@
     import { registerStartASMLanguage } from '$lib/monaco-startasm';
 
     let editorContainer: HTMLDivElement;
+    let message = "Hello Tailwind!";
 
     onMount(() => {
         // Register the StartASM language before creating the editor
@@ -74,4 +75,9 @@
     }
 </style>
 
-<div bind:this={editorContainer} class="editor-container"></div>
+<div bind:this={editorContainer} class="editor-container bg-black text-white p-4 rounded shadow-lg mt-8"></div>
+<div class="bg-blue-500 text-white p-4 rounded-lg shadow-lg">
+    {message}
+</div>
+
+
