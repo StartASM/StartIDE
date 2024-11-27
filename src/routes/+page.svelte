@@ -1,10 +1,12 @@
 <script lang="ts">
     import * as monaco from 'monaco-editor';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { registerStartASMLanguage } from '$lib/monaco-startasm';
 
     let editorContainer: HTMLDivElement;
-    let message = "Hello Tailwind!";
+    let terminalContent = "Terminal Output Here";
+    let fileExplorer = ["main.sasm", "helper.sasm", "example.sasm"];
+    let editor;
 
     onMount(() => {
         // Register the StartASM language before creating the editor
@@ -17,7 +19,7 @@
             rules: [
                 { token: 'keyword.instruction', foreground: '569CD6', fontStyle: 'bold' }, // Blue
                 { token: 'variable', foreground: '4EC9B0', fontStyle: 'bold' }, // Teal
-                { token: 'number', foreground: '8BED8A', fontStyle: 'bold'}, // Light Green
+                { token: 'number', foreground: '8BED8A', fontStyle: 'bold' }, // Light Green
                 { token: 'number.hex', foreground: 'B5CEA8' }, // Yellow-green
                 { token: 'character', foreground: 'FFFFFF', fontStyle: 'bold' }, // White for characters
                 { token: 'string', foreground: 'CE9178' }, // Green
@@ -32,7 +34,6 @@
                 { token: 'keyword.conjunctionCond', foreground: 'FFB469', fontStyle: 'bold' }, // Light Orange
                 { token: 'keyword.conjunctionAttr', foreground: '9CDCFE', fontStyle: 'bold' }, // Light blue
                 { token: 'keyword.stop', foreground: '850303', fontStyle: 'bold' }, // Maroon red
-
             ],
             colors: {},
         });
@@ -41,43 +42,60 @@
         monaco.editor.setTheme('startasm-theme');
 
         // Create the Monaco Editor instance
-        const editor = monaco.editor.create(editorContainer, {
+        editor = monaco.editor.create(editorContainer, {
             value: ``, // Example StartASM code
             language: 'startasm',
             theme: 'startasm-theme', // Apply the custom theme
-
-            // Custom line numbering to ignore empty lines
-            lineNumbers: (lineNumber: number): string | number => {
-                const lines = editor.getModel()?.getLinesContent();
-                if (!lines) return lineNumber; // Fallback if the model is null
-
-                let nonEmptyLineCounter = 1;
-
-                for (let i = 0; i < lineNumber; i++) {
-                    if (lines[i].trim() !== '') {
-                        nonEmptyLineCounter++;
-                    }
-                }
-
-                // Return empty string for empty lines; otherwise, return the computed number
-                return lines[lineNumber - 1].trim() === '' ? '' : nonEmptyLineCounter - 1;
-            },
+            automaticLayout: true, // Allows Monaco to adjust layout automatically
+            lineNumbers: "on",
         });
 
-        return () => editor.dispose(); // Cleanup on destroy
+        // Handle window resize for Monaco
+        const resizeObserver = new ResizeObserver(() => {
+            editor.layout(); // Trigger Monaco to recalculate its dimensions
+        });
+        resizeObserver.observe(editorContainer);
+
+        // Cleanup on destroy
+        onDestroy(() => {
+            editor.dispose();
+            resizeObserver.disconnect();
+        });
     });
 </script>
 
 <style>
     .editor-container {
-        width: 100%;
-        height: 90vh;
+        flex-grow: 1;
+        min-height: 0;
+    }
+
+    .terminal-window {
+        height: 20vh;
+        overflow-y: auto;
     }
 </style>
 
-<div bind:this={editorContainer} class="editor-container bg-black text-white p-4 rounded shadow-lg mt-8"></div>
-<div class="bg-blue-500 text-white p-4 rounded-lg shadow-lg">
-    {message}
+<div class="flex h-screen">
+    <!-- File Explorer -->
+    <div class="w-1/5 bg-gray-900 text-white p-4 shadow-lg">
+        <h2 class="text-lg font-bold mb-4">File Explorer</h2>
+        <ul class="space-y-2">
+            {#each fileExplorer as file}
+                <li class="p-2 bg-gray-800 rounded hover:bg-gray-700 cursor-pointer">{file}</li>
+            {/each}
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-col flex-grow">
+        <!-- Code Editor -->
+        <div bind:this={editorContainer} class="editor-container bg-black text-white shadow-lg"></div>
+
+        <!-- Terminal -->
+        <div class="terminal-window bg-gray-800 text-white p-4 mt-2">
+            <h2 class="text-lg font-bold">Terminal</h2>
+            <pre class="mt-2">{terminalContent}</pre>
+        </div>
+    </div>
 </div>
-
-
