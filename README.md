@@ -60,5 +60,7 @@ Follow these steps to get started:
 StartIDE is designed to work with the StartASM compiler. Ensure a docker image of the compiler is correctly installed and accessible from the CLI to enable full functionality.
 StartIDE is also designed to use Ignition. Ensure the `Ignition` module, and it's necessary requisites, are also on your machine.
 
+## A Note on Linux
+Linux performance at this stage is not very performant (possibly due to the native web view use). This is an issue that will be addressed at a later stage.
 ## License
 This project is licensed under the MIT license. Feel free to fork, contribute, and use it in any manner you like.
