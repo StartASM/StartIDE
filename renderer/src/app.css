@@ -1,26 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Root resets */
 :root {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', sans-serif; /* Modern sans-serif font */
   color-scheme: dark;
-  background-color: #1e1e1e;
+  background-color: #4158D0;
+  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
 }
 
-/* Remove unnecessary global styles */
+/* Global body and HTML resets */
 body, html {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: Arial, sans-serif;
-  background-color: #1e1e1e;
+  font-family: 'Inter', sans-serif;
+  color: #e0e0e0; /* Lighter text color for better readability */
+  line-height: 1.5; /* Slightly better line height for readability */
+}
+
+/* Global link styling */
+a {
+  color: #66b8ff; /* Modern accent color for links */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #ffffff; /* On hover, links turn to white */
 }
 
 /* Monaco-specific styling to ensure proper alignment */
 .monaco-editor {
-  font-family: Consolas, "Courier New", monospace !important; /* Ensure consistent monospace font */
+  font-family: 'Fira Code', 'Consolas', monospace !important; /* Fira Code for programming font */
+  background-color: #1e1e1e; /* Dark background to match the theme */
+  color: #dcdcdc; /* Lighter text in the editor */
+  line-height: 1.6; /* Adjusted line height for better readability in the editor */
 }
 
+/* Styling for Monaco's view-line */
 .monaco-editor .view-line {
   text-align: left;
   white-space: pre;
+  padding: 0.1rem 0; /* Adding a bit of padding for better spacing between lines */
+}
+
+/* Subtle shadows for a modern look */
+button, .icon-button {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+button:hover, .icon-button:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  transform: translateY(-2px); /* Slight hover effect for buttons */
+}
+
+/* Styling for input fields, text areas, and other form elements */
+input, textarea, select {
+  font-family: 'Inter', sans-serif;
+  background-color: #333; /* Dark background for form elements */
+  color: #e0e0e0; /* Light text color */
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #66b8ff; /* Accent color on focus */
+  outline: none;
+}
+
+/* General container spacing for cleaner layout */
+.container {
+  padding: 2rem;
+}
+
+/* More modern-looking cards with rounded corners */
+.card {
+  background-color: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Modernize the buttons with rounded edges */
+button, .icon-button {
+  padding: 0.75rem 1rem;
+  border-radius: 5px; /* Rounded corners */
+  font-size: 1rem;
+  background-color: #444; /* Dark button background */
+  color: #ffffff; /* White text */
+  border: none;
+}
+
+button:hover, .icon-button:hover {
+  background-color: #555; /* Lighter background on hover */
+}
+
+/* Update tooltips to be more modern */
+.tooltip {
+  background-color: rgba(0, 0, 0, 0.75); /* Slightly darker tooltip background */
+  color: #ffffff;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease;
+}
+
+.card, .container, .editor-container {
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle border */
 }
