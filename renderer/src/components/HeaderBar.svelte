@@ -15,12 +15,14 @@
         align-items: center;
         justify-content: space-between;
         padding: 0.5rem 1rem;
-        background-color: #2d2d2d;
+        background: rgba(45, 45, 45, 0.6); /* Semi-transparent background */
+        backdrop-filter: blur(12px); /* Apply frosted glass blur effect */
+        -webkit-backdrop-filter: blur(12px); /* Safari support */
         color: #ffffff;
-        border-bottom: 1px solid #444;
         font-size: 1rem;
-        gap: 0.5rem;
         overflow: hidden;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     }
 
     .file-name {
@@ -30,6 +32,17 @@
         text-overflow: ellipsis;
         flex-grow: 1;
         min-width: 0;
+        position: relative;
+    }
+
+    .file-name::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, #66b8ff, #ff6f61);
     }
 
     .actions {
@@ -53,7 +66,7 @@
     .vertical-line {
         height: 24px;
         width: 1px;
-        background-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.3); /* Transparent vertical line */
         margin: 0 1rem;
     }
 
@@ -63,16 +76,20 @@
         justify-content: center;
         width: 2rem;
         height: 2rem;
-        background: transparent;
-        border: none;
-        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.1); /* Semi-transparent button background */
+        backdrop-filter: blur(10px); /* Frosted glass effect for buttons */
+        -webkit-backdrop-filter: blur(10px); /* Safari support */
+        border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+        border-radius: 6px;
         color: #ffffff;
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
     }
 
     .icon-button:hover {
-        background-color: #444;
+        background-color: rgba(255, 255, 255, 0.2); /* Slightly brighter hover */
+        border-color: rgba(255, 255, 255, 0.4); /* Brighter border on hover */
+        transform: scale(1.05); /* Subtle zoom */
     }
 
     .close-button {
@@ -80,7 +97,7 @@
     }
 
     .close-button:hover {
-        background-color: #660000;
+        background-color: rgba(102, 0, 0, 0.4); /* Semi-transparent red hover */
     }
 </style>
 
