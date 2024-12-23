@@ -2,6 +2,7 @@
   import * as monaco from 'monaco-editor';
   import { onMount, onDestroy } from 'svelte';
   import { registerStartASMLanguage } from '../lib/monaco-startasm';
+  import HeaderBar from './components/HeaderBar.svelte';
 
   let editorContainer: HTMLDivElement;
   let terminalContent = "Terminal Output Here";
@@ -65,15 +66,9 @@
 </script>
 
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
-    color: #ffffff;
-  }
-
   .app-container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
   }
 
@@ -81,11 +76,14 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    overflow: visible; /* Allow tooltips to overflow */
   }
 
   .editor-container {
     flex-grow: 1;
     background-color: black;
+    overflow: visible; /* Allow editor scrolling but avoid clipping */
+    position: relative; /* Enable proper tooltip positioning */
   }
 </style>
 
@@ -93,6 +91,7 @@
   <!-- Main Content Area -->
   <div class="main-area">
     <!-- Code Editor -->
+    <HeaderBar fileName="main.sasm" />
     <div bind:this={editorContainer} class="editor-container"></div>
   </div>
 </div>

@@ -24,7 +24,9 @@
     "vite": "^5.1.0"
   },
   "dependencies": {
+    "bootstrap-icons": "^1.11.3",
     "daisyui": "^4.12.22",
-    "monaco-editor": "^0.52.2"
+    "monaco-editor": "^0.52.2",
+    "svelte-portal": "^2.2.1"
   }
 }
