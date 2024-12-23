@@ -18,7 +18,10 @@
     "directories": {
       "output": "build"
     },
-    "files": ["dist/**/*", "package.json"],
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
     "win": {
       "target": "nsis",
       "icon": "path/to/your/icon/icon.ico"
@@ -47,6 +50,7 @@
     "concurrently": "^8.2.2",
     "electron": "^28.2.3",
     "electron-builder": "^24.9.1",
+    "monaco-editor-webpack-plugin": "^7.1.0",
     "prettier": "^3.2.5",
     "prettier-plugin-svelte": "^3.2.1"
   },
