@@ -77,37 +77,6 @@
     height: 100vh;
   }
 
-  .file-explorer {
-    width: 20%;
-    background-color: #282c34;
-    padding: 10px;
-    overflow-y: auto;
-  }
-
-  .file-explorer h2 {
-    margin: 0 0 10px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  .file-explorer ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .file-explorer li {
-    padding: 8px;
-    margin-bottom: 5px;
-    background-color: #3a3f47;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .file-explorer li:hover {
-    background-color: #50575e;
-  }
-
   .main-area {
     display: flex;
     flex-direction: column;
@@ -118,47 +87,12 @@
     flex-grow: 1;
     background-color: black;
   }
-
-  .terminal-window {
-    height: 20vh;
-    background-color: #282c34;
-    padding: 10px;
-    overflow-y: auto;
-  }
-
-  .terminal-window h2 {
-    margin: 0 0 10px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  .terminal-window pre {
-    margin: 0;
-    font-family: monospace;
-    white-space: pre-wrap;
-  }
 </style>
 
 <div class="app-container">
-  <!-- File Explorer -->
-  <div class="file-explorer">
-    <h2>File Explorer</h2>
-    <ul>
-      {#each fileExplorer as file}
-        <li>{file}</li>
-      {/each}
-    </ul>
-  </div>
-
   <!-- Main Content Area -->
   <div class="main-area">
     <!-- Code Editor -->
     <div bind:this={editorContainer} class="editor-container"></div>
-
-    <!-- Terminal -->
-    <div class="terminal-window">
-      <h2>Terminal</h2>
-      <pre>{terminalContent}</pre>
-    </div>
   </div>
 </div>
