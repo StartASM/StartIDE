@@ -28,6 +28,6 @@
   <!-- Main Content Area -->
   <div class="main-area">
     <HeaderBar fileName="main.sasm" />
-    <MonacoEditor initialValue="comment Write your StartASM code here" />
+    <MonacoEditor initialValue="comment write your StartASM code here" />
   </div>
 </div>

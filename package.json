@@ -1,7 +1,8 @@
 {
-  "name": "electron-svelte",
+  "name": "start-ide",
+  "productName": "StartIDE",
   "version": "0.0.1",
-  "description": "A simple electron/svelte/electron-builder template for building cross platform apps.",
+  "description": "The StartASM Editor and Development Environment.",
   "main": "dist/electron/app.js",
   "scripts": {
     "dev": "concurrently --kill-others \"npm run dev:renderer\" \"npm run dev:electron\" \"cd electron && tsc -w\"",
@@ -13,8 +14,8 @@
     "format": "prettier --write ."
   },
   "build": {
-    "appId": "your.app.id",
-    "productName": "YourProductName",
+    "appId": "start.ide",
+    "productName": "StartIDE",
     "directories": {
       "output": "build"
     },

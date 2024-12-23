@@ -5,22 +5,22 @@ import { join } from "path";
 let mainWindow: BrowserWindow;
 
 app.once("ready", main);
+app.setName("StartIDE");
 
 async function main() {
   mainWindow = new BrowserWindow({
-    width: 800, // Initial width
-    height: 600, // Initial height
-    resizable: true, // Enable resizing
-    minimizable: true, // Allow minimizing
-    maximizable: true, // Allow maximizing
-    show: false, // Prevent the window from showing until it's ready
+    width: 800,
+    height: 600,
+    resizable: true,
+    minimizable: true,
+    maximizable: true,
+    frame: true,
     webPreferences: {
       devTools: true || !app.isPackaged, // Enable devtools
       preload: join(__dirname, "preload.js"), // Preload script
     },
   });
 
-  // Load the appropriate content (local or development server)
   if (app.isPackaged) {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   } else {
@@ -32,19 +32,14 @@ async function main() {
     await mainWindow.loadURL(`http://localhost:5173/`);
   }
 
-  // Show the window when it's ready
   mainWindow.once("ready-to-show", mainWindow.show);
 
-  // Handle window resize event and send size to renderer
   mainWindow.on("resize", () => {
-    const bounds = mainWindow.getBounds(); // Correctly access the bounds object
-    const width = bounds.width;
-    const height = bounds.height;
-
+    const bounds = mainWindow.getBounds();
+    const { width, height } = bounds;
     mainWindow.webContents.send("window-resize", { width, height });
   });
 
-  // Optional: Listen to maximize and minimize events
   mainWindow.on("maximize", () => {
     mainWindow.webContents.send("window-state", "maximized");
   });
@@ -57,7 +52,21 @@ async function main() {
     mainWindow.webContents.send("window-state", "minimized");
   });
 
-  // IPC handler to return Electron/Node.js versions
+  // Handle custom window control events
+  ipcMain.on("window-control", (event, action) => {
+    switch (action) {
+      case "close":
+        mainWindow.close();
+        break;
+      case "minimize":
+        mainWindow.minimize();
+        break;
+      case "maximize":
+        mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
+        break;
+    }
+  });
+
   ipcMain.handle("get-version", (_, key: "electron" | "node") => {
     return String(process.versions[key]);
   });
