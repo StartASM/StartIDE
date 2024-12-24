@@ -57,7 +57,7 @@
                         on:click={terminalMenu}
                         aria-label="Terminal Menu"
                 >
-                    <i class="bi bi-terminal-fill"></i>
+                    <i class="bi bi-terminal-plus"></i>
                 </button>
                 <button
                         class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
