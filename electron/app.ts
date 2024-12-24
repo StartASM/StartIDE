@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import { join } from "path";
+import { spawn } from 'child_process';
 
 let mainWindow: BrowserWindow;
 
@@ -71,5 +72,22 @@ async function main() {
 
   ipcMain.handle("get-version", (_, key: "electron" | "node") => {
     return String(process.versions[key]);
+  });
+
+  ipcMain.on('terminal-input', (event, input) => {
+    const shell = spawn('bash', [], { stdio: ['pipe', 'pipe', 'pipe'] });
+
+    // Write input to the shell
+    shell.stdin.write(input + '\n');
+    shell.stdin.end();
+
+    // Send output back to the renderer
+    shell.stdout.on('data', (data) => {
+      event.reply('terminal-output', data.toString());
+    });
+
+    shell.stderr.on('data', (data) => {
+      event.reply('terminal-output', `Error: ${data.toString()}`);
+    });
   });
 }
