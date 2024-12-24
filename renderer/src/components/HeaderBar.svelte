@@ -8,9 +8,22 @@
     const closeFile = () => alert('Close file');
 </script>
 
-<div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-60 backdrop-blur-lg rounded-t-lg shadow-md">
-    <!-- Increased margin for the title -->
-    <div class="text-white font-bold truncate flex-grow ml-4">{fileName}</div>
+<div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-60 backdrop-blur-lg rounded-t-lg shadow-md relative">
+    <!-- Left section with hamburger menu -->
+    <div class="flex items-center gap-4">
+        <!-- Hamburger menu -->
+        <div class="relative ml-2">
+            <div
+                    class="text-white text-2xl cursor-pointer hover:scale-110 transition-transform"
+                    aria-label="Menu"
+            >
+                <i class="bi bi-list"></i>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="text-white font-bold truncate flex-grow">{fileName}</div>
+    </div>
 
     <div class="flex items-center gap-4">
         <!-- Left button group with increased spacing -->
