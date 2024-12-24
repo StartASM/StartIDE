@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { errorTerminalToggled } from '../../../lib/store'; // Import the store
+    import {errorTerminalToggled, terminalOpen} from '../../../lib/store';
 
-    const closeWindow = () => alert('Close terminal');
+    const closeWindow = () => {
+        terminalOpen.update(() => false);
+    };
 
     const toggleError = () => {
-        // Toggle the state in the store
         errorTerminalToggled.update((current) => !current);
     };
 

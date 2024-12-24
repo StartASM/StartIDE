@@ -1,14 +1,16 @@
 <script lang="ts">
+    import {editorOpen, terminalOpen} from "../../../lib/store";
+
     export let fileName = 'Untitled';
     export let fileExtension = '.file';
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
-    const terminalMenu = () => alert('Bring up Terminal Menu')
+    const terminalMenu = () => terminalOpen.update((current) => !current);
     const vmMenu = () => alert('Bring up VM screen');
     const fileMenu = () => alert('Bring up file menu');
-    const settingsMenu = () => alert('Bring up Settings');
-    const closeWindow = () => alert('Close file');
+    const closeWindow = () => editorOpen.update(() => false);
+
 </script>
 
 <div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-60 backdrop-blur-lg rounded-t-lg shadow-md relative">
@@ -57,7 +59,7 @@
                         on:click={terminalMenu}
                         aria-label="Terminal Menu"
                 >
-                    <i class="bi bi-terminal-plus"></i>
+                    <i class="bi bi-terminal-x"></i>
                 </button>
                 <button
                         class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
