@@ -17,9 +17,13 @@ contextBridge.exposeInMainWorld("bridge", {
 
   // Terminal functionality
   terminal: {
-    sendInput: (input: string) => ipcRenderer.send("terminal-input", input), // Send terminal input
+    sendInput: (input: string) => ipcRenderer.send("terminal-input", input),
     onOutput: (callback: (output: string) => void) => {
-      ipcRenderer.on("terminal-output", (_, output) => callback(output)); // Listen for terminal output
+      ipcRenderer.on("terminal-output", (_, output) => callback(output));
     },
   },
+  getCurrentDirectory: () => ipcRenderer.invoke("get-current-directory"),
+  onDirectoryChanged: (callback: (newDir: string) => void) => {
+    ipcRenderer.on("directory-changed", (_, newDir) => callback(newDir)); // Listen for directory change
+  }
 });

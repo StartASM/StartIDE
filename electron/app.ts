@@ -1,9 +1,11 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import { join } from "path";
-import { spawn } from 'child_process';
+import { spawn } from "child_process";
+import { homedir } from "os";
 
 let mainWindow: BrowserWindow;
+let currentDirectory = homedir(); // Start in the user's home directory
 
 app.once("ready", main);
 app.setName("StartIDE");
@@ -74,20 +76,46 @@ async function main() {
     return String(process.versions[key]);
   });
 
-  ipcMain.on('terminal-input', (event, input) => {
-    const shell = spawn('bash', [], { stdio: ['pipe', 'pipe', 'pipe'] });
-
-    // Write input to the shell
-    shell.stdin.write(input + '\n');
-    shell.stdin.end();
-
-    // Send output back to the renderer
-    shell.stdout.on('data', (data) => {
-      event.reply('terminal-output', data.toString());
-    });
-
-    shell.stderr.on('data', (data) => {
-      event.reply('terminal-output', `Error: ${data.toString()}`);
-    });
+  ipcMain.handle("get-current-directory", () => {
+    return currentDirectory; // Return the current working directory
   });
+
+  ipcMain.on("terminal-input", (event, input) => {
+    const [command, ...args] = input.trim().split(" ");
+    if (!command) {
+      // No command entered, just send back nothing
+      event.reply("terminal-output", ""); // Ensure no hang, but send nothing
+      return;
+    }
+    if (command === "cd") {
+      // Handle `cd` command
+      const newDir = args.join(" ") || homedir(); // Default to home directory
+      try {
+        process.chdir(newDir); // Change the working directory
+        currentDirectory = process.cwd(); // Update current directory
+        event.reply("terminal-output", ""); // Send empty string for successful `cd`
+        event.reply("directory-changed", currentDirectory); // Notify frontend of directory change
+      } catch (error) {
+        event.reply("terminal-output", `Error: ${error.message}`);
+      }
+    } else {
+      // Execute other commands
+      const shell = spawn(command, args, { cwd: currentDirectory, shell: true });
+
+      shell.stdout.on("data", (data) => {
+        const sanitizedOutput = sanitizeOutput(data.toString());
+        event.reply("terminal-output", sanitizedOutput);
+      });
+
+      shell.stderr.on("data", (data) => {
+        const sanitizedError = sanitizeOutput(data.toString());
+        event.reply("terminal-output", sanitizedError);
+      });
+    }
+  });
+}
+
+// Sanitize terminal output by replacing unwanted characters
+function sanitizeOutput(output: string): string {
+  return output.replace(/\r/g, "").replace(/\t/g, "    ").trimEnd();
 }
