@@ -1,5 +1,6 @@
 <script lang="ts">
   import HeaderBar from './components/HeaderBar.svelte';
+  import FooterBar from './components/FooterBar.svelte';
   import MonacoEditor from './components/EditorWindow.svelte';
   let sampleCode =
           "comment \"Pointer code is to test some basic pointer operations in StartASM\"\n" +
@@ -39,8 +40,11 @@
 </script>
 
 <div class="flex flex-col h-screen">
-  <div class="flex flex-col flex-grow p-4">
+  <div class="flex flex-col flex-grow p-4 overflow-hidden">
     <HeaderBar fileName="main.sasm" />
-    <MonacoEditor initialValue={sampleCode} />
+    <div class="flex-grow overflow-hidden">
+      <MonacoEditor initialValue={sampleCode} />
+    </div>
+    <FooterBar />
   </div>
 </div>

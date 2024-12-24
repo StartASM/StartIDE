@@ -9,6 +9,16 @@
 
     let editorContainer: HTMLDivElement;
     let editor;
+    let nonEmptyLineCount = 0; // Track non-empty line count
+
+    // Function to calculate non-empty line count
+    function calculateNonEmptyLines(content: string): number {
+        // Split the content into lines, trim whitespace, and filter out empty lines
+        return content
+            .split('\n')
+            .filter(line => line.trim().length > 0) // Only count non-empty lines
+            .length;
+    }
 
     onMount(() => {
         // Register the StartASM language before creating the editor
@@ -49,7 +59,22 @@
             language,
             theme,
             automaticLayout: true,
-            lineNumbers: "on",
+            lineNumbers: (lineNumber) => {
+                const lines = editor.getValue().split('\n');
+                const currentLine = lines[lineNumber - 1]; // Get the content of the current line
+                // Check if the current line is empty or whitespace-only
+                if (!currentLine || currentLine.trim().length === 0) {
+                    return ''; // Return blank for empty lines
+                }
+                // Count non-empty lines up to the current line
+                const trimmedLines = lines.slice(0, lineNumber).filter(line => line.trim().length > 0);
+                return trimmedLines.length.toString(); // Return the correct non-empty line number
+            },
+        });
+        // Update non-empty line count whenever the content changes
+        editor.onDidChangeModelContent(() => {
+            const content = editor.getValue();
+            nonEmptyLineCount = calculateNonEmptyLines(content);
         });
 
         // Cleanup on destroy
@@ -62,11 +87,10 @@
 <style>
     .editor-container {
         flex-grow: 1;
-        background-color: black;
         overflow: hidden; /* Prevent content from bleeding out */
         position: relative;
-        border-radius: 0 0 8px 8px; /* Apply bottom rounding */
     }
 </style>
 
-<div bind:this={editorContainer} class="editor-container"></div>
+<div bind:this={editorContainer} class="editor-container flex-grow h-full overflow-auto"></div>
+

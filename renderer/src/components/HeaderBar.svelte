@@ -3,7 +3,8 @@
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
-    const vmMenu = () => alert('Bring up VM menu');
+    const terminalMenu = () => alert('Bring up Terminal Menu')
+    const vmMenu = () => alert('Bring up VM screen');
     const fileMenu = () => alert('Bring up file menu');
     const closeFile = () => alert('Close file');
 </script>
@@ -49,6 +50,13 @@
 
         <!-- Right button group with increased spacing -->
         <div class="flex items-center gap-3">
+            <button
+                    class="btn btn-sm btn-circle hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
+                    on:click={terminalMenu}
+                    aria-label="VM Menu"
+            >
+                <i class="bi bi-terminal-fill"></i>
+            </button>
             <button
                     class="btn btn-sm btn-circle hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
                     on:click={vmMenu}
