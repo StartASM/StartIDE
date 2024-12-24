@@ -2,6 +2,7 @@
     import * as monaco from 'monaco-editor';
     import { onMount, onDestroy } from 'svelte';
     import { registerStartASMLanguage } from '../../lib/monaco-startasm';
+    import { currentLineNumber } from '../../lib/store';
 
     export let initialValue = ''; // Initial content for the editor
     export let language = 'startasm'; // Programming language for syntax highlighting
@@ -9,15 +10,42 @@
 
     let editorContainer: HTMLDivElement;
     let editor;
-    let nonEmptyLineCount = 0; // Track non-empty line count
 
-    // Function to calculate non-empty line count
-    function calculateNonEmptyLines(content: string): number {
-        // Split the content into lines, trim whitespace, and filter out empty lines
-        return content
-            .split('\n')
-            .filter(line => line.trim().length > 0) // Only count non-empty lines
-            .length;
+    function calculateLogicalLineRange(selection: monaco.Selection): string {
+        const lines = editor.getValue().split('\n'); // Split the content into lines
+        const nonWhitespaceLines = lines
+            .map((line, index) => ({ line, index: index + 1 })) // Add 1-based line numbers
+            .filter(item => item.line.trim().length > 0); // Keep only non-whitespace lines
+        //Create a mapping from literal line numbers to logical line numbers
+        const literalToLogicalMap = new Map<number, number>();
+        nonWhitespaceLines.forEach((item, logicalIndex) => {
+            literalToLogicalMap.set(item.index, logicalIndex + 1); // Map literal to logical (1-based)
+        });
+        const startLine = selection.startLineNumber;
+        const endLine = selection.endLineNumber;
+        // Find the first and last valid lines in the selection
+        const validStart = nonWhitespaceLines.find(item => item.index >= startLine);
+        const validEnd = nonWhitespaceLines.findLast(item => item.index <= endLine);
+        const startLogical = validStart ? literalToLogicalMap.get(validStart.index) : undefined;
+        const endLogical = validEnd ? literalToLogicalMap.get(validEnd.index) : undefined;
+        // If no valid lines are in the selection, return "Newline"
+        if (!startLogical && !endLogical) {
+            return 'Newline';
+        }
+        // If the start is undefined but the end is defined, it's an invalid range, return "Newline"
+        if (startLogical === undefined && endLogical !== undefined) {
+            return 'Newline';
+        }
+        // If the end logical line is greater than the start logical line, return "Newline"
+        if (endLogical !== undefined && startLogical !== undefined && endLogical < startLogical) {
+            return 'Newline';
+        }
+        // If there's only one valid logical line
+        if (startLogical === endLogical) {
+            return `Line ${startLogical}`;
+        }
+        // Return the range of logical lines
+        return `Lines ${startLogical}-${endLogical}`;
     }
 
     onMount(() => {
@@ -77,10 +105,9 @@
                 maxColumn: 100, // Set max width before minimap shows up
             },
         });
-        // Update non-empty line count whenever the content changes
-        editor.onDidChangeModelContent(() => {
-            const content = editor.getValue();
-            nonEmptyLineCount = calculateNonEmptyLines(content);
+        editor.onDidChangeCursorSelection((event) => {
+            const rangeInfo = calculateLogicalLineRange(event.selection); // Calculate logical line range
+            currentLineNumber.set(rangeInfo); // Update the store with the computed range
         });
 
         // Cleanup on destroy
