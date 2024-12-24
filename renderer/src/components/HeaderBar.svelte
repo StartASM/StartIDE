@@ -1,5 +1,6 @@
 <script lang="ts">
     export let fileName = 'Untitled';
+    export let fileExtension = '.file';
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
@@ -31,14 +32,14 @@
         <!-- Left button group with increased spacing -->
         <div class="flex items-center gap-3">
             <button
-                    class="btn btn-sm btn-square text-green-600 hover:scale-105 focus:outline focus:outline-green-600 hover:outline hover:outline-green-600 transition-transform"
+                    class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg text-green-600 hover:scale-105 focus:outline focus:outline-green-600 hover:outline hover:outline-green-600 transition-transform"
                     on:click={runFile}
                     aria-label="Run"
             >
                 <i class="bi bi-play-fill"></i>
             </button>
             <button
-                    class="btn btn-sm btn-square text-blue-600 hover:scale-105 focus:outline focus:outline-blue-600 hover:outline hover:outline-blue-600 transition-transform"
+                    class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg text-blue-600 hover:scale-105 focus:outline focus:outline-blue-600 hover:outline hover:outline-blue-600 transition-transform"
                     on:click={compileFile}
                     aria-label="Compile"
             >
@@ -52,21 +53,21 @@
         <div class="flex items-center gap-1">
             <div class="flex items-center gap-3">
                 <button
-                        class="btn btn-sm btn-square hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
+                        class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
                         on:click={terminalMenu}
                         aria-label="Terminal Menu"
                 >
                     <i class="bi bi-terminal-fill"></i>
                 </button>
                 <button
-                        class="btn btn-sm btn-square hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
+                        class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
                         on:click={vmMenu}
                         aria-label="VM Menu"
                 >
                     <i class="bi bi-motherboard-fill"></i>
                 </button>
                 <button
-                        class="btn btn-sm btn-square hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
+                        class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
                         on:click={fileMenu}
                         aria-label="File Menu"
                 >
@@ -79,7 +80,7 @@
 
         <div class="flex items-center gap-2">
             <button
-                    class="btn btn-sm btn-square text-red-600 hover:scale-105 focus:outline focus:outline-red-600 hover:outline hover:outline-red-600 transition-transform"
+                    class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg text-red-600 hover:scale-105 focus:outline focus:outline-red-600 hover:outline hover:outline-red-600 transition-transform"
                     on:click={closeWindow}
                     aria-label="Close"
             >

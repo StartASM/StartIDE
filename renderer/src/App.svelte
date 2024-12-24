@@ -41,7 +41,7 @@
 
 <div class="flex flex-col h-screen">
   <div class="flex flex-col flex-grow p-2 overflow-hidden">
-    <HeaderBar fileName="main.sasm" />
+    <HeaderBar fileName="main" fileExtension="(.sasm)" />
     <div class="flex-grow overflow-hidden">
       <MonacoEditor initialValue={sampleCode} />
     </div>
