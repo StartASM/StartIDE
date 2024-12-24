@@ -70,6 +70,12 @@
                 const trimmedLines = lines.slice(0, lineNumber).filter(line => line.trim().length > 0);
                 return trimmedLines.length.toString(); // Return the correct non-empty line number
             },
+            scrollBeyondLastLine: false, // Prevent scrolling beyond the last line
+            minimap: {
+                enabled: true, // Enable minimap
+                renderCharacters: true, // Render characters in the minimap
+                maxColumn: 100, // Set max width before minimap shows up
+            },
         });
         // Update non-empty line count whenever the content changes
         editor.onDidChangeModelContent(() => {

@@ -5,7 +5,7 @@
 
 <div class="flex items-center justify-between p-0.5 bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-b-lg shadow-sm relative text-xs">
     <!-- Left text area -->
-    <div class="text-white font-medium truncate ml-1 drop-shadow-sm">
+    <div class="text-white font-semibold truncate ml-1 drop-shadow-sm">
         {leftText}
     </div>
 

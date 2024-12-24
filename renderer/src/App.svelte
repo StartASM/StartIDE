@@ -40,7 +40,7 @@
 </script>
 
 <div class="flex flex-col h-screen">
-  <div class="flex flex-col flex-grow p-4 overflow-hidden">
+  <div class="flex flex-col flex-grow p-2 overflow-hidden">
     <HeaderBar fileName="main.sasm" />
     <div class="flex-grow overflow-hidden">
       <MonacoEditor initialValue={sampleCode} />
