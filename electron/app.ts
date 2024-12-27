@@ -100,16 +100,29 @@ async function main() {
       }
     } else {
       // Execute other commands
-      const shell = spawn(command, args, { cwd: currentDirectory, shell: true });
+      const shell = spawn(command, args, {
+        cwd: currentDirectory,
+        shell: process.env.SHELL || "/bin/bash", // Use user's default shell or bash
+        env: {
+          ...process.env, // Inherit environment variables
+          COLUMNS: `${Math.floor(mainWindow.getBounds().width / 8)}`, // Set terminal width
+        },
+      });
+
+      let stdoutBuffer = '';
+      let stderrBuffer = '';
 
       shell.stdout.on("data", (data) => {
-        const sanitizedOutput = sanitizeOutput(data.toString());
-        event.reply("terminal-output", sanitizedOutput);
+        stdoutBuffer += data.toString();
       });
 
       shell.stderr.on("data", (data) => {
-        const sanitizedError = sanitizeOutput(data.toString());
-        event.reply("terminal-output", sanitizedError);
+        stderrBuffer += data.toString();
+      });
+
+      shell.on("close", (code) => {
+        if (stdoutBuffer) event.reply("terminal-output", sanitizeOutput(stdoutBuffer));
+        if (stderrBuffer) event.reply("terminal-output", sanitizeOutput(stderrBuffer));
       });
     }
   });
@@ -117,5 +130,5 @@ async function main() {
 
 // Sanitize terminal output by replacing unwanted characters
 function sanitizeOutput(output: string): string {
-  return output.replace(/\r/g, "").replace(/\t/g, "    ").trimEnd();
+  return output.replace(/\r/g, "").trimEnd(); // Keep \t for proper formatting
 }

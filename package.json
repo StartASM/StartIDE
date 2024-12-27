@@ -11,7 +11,8 @@
     "build:renderer": "cd renderer && npm run build",
     "dev:renderer": "cd renderer && npm run dev",
     "dev:electron": "npm run build:electron && electron .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "rebuild": "electron-rebuild"
   },
   "build": {
     "appId": "start.ide",
@@ -56,7 +57,10 @@
     "prettier-plugin-svelte": "^3.2.1"
   },
   "dependencies": {
+    "electron-rebuild": "^3.2.9",
     "electron-reload": "^2.0.0-alpha.1",
+    "nan": "^2.22.0",
+    "node-pty": "^1.0.0",
     "svelte-portal": "^2.2.1",
     "xterm-addon-fit": "^0.8.0"
   }
