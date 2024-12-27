@@ -1,13 +1,14 @@
 <script lang="ts">
-    import {editorOpen, consoleOpen} from "../../../lib/appStore";
+    import {editorOpen, terminalOpen} from "../../../lib/appStore";
 
     export let fileName = 'Untitled';
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
-    const terminalMenu = () => consoleOpen.update((current) => !current);
+    const terminalMenu = () => terminalOpen.update((current) => !current);
     const vmMenu = () => alert('Bring up VM screen');
     const fileMenu = () => alert('Bring up file menu');
+    const errorLog = () => alert('Bring up error log');
     const closeWindow = () => editorOpen.update(() => false);
 
 </script>
@@ -73,6 +74,13 @@
                         aria-label="File Menu"
                 >
                     <i class="bi bi-folder-fill"></i>
+                </button>
+                <button
+                        class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
+                        on:click={errorLog}
+                        aria-label="Error Log"
+                >
+                    <i class="bi bi-check-circle-fill"></i>
                 </button>
             </div>
         </div>

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import {errorTerminalToggled, consoleOpen} from '../../lib/appStore';
-
     import HeaderBarConsole from '../components/terminal/HeaderBarConsole.svelte';
     import XtermTerminal from '../components/terminal/XtermTerminal.svelte';
 </script>
