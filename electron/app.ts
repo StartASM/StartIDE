@@ -7,6 +7,7 @@ import * as pty from "node-pty";
 let mainWindow: BrowserWindow;
 let currentDirectory = homedir(); // Start in the user's home directory
 let ptyProcess: pty.IPty; // Node-Pty instance
+let lastCommand = ""; // Keep track of the last command entered by the user.
 
 app.once("ready", main);
 app.setName("StartIDE");
@@ -108,8 +109,20 @@ function setupPty() {
     },
   });
 
+  // Attempt to suppress echo for Unix-like shells
+
   ptyProcess.onData((data) => {
-    mainWindow?.webContents.send("terminal-output", data);
+    console.log("output");
+
+    // Filter out the echoed command
+    const filteredData = data
+        .split('\r')
+        .filter((line) => !lastCommand || !line.includes(lastCommand)) // Remove echoed command
+        .join('\r');
+
+    console.log(filteredData);
+    mainWindow?.webContents.send("terminal-output", filteredData);
+    console.log("end output");
   });
 
   ptyProcess.onExit(({ exitCode, signal }) => {
@@ -117,6 +130,7 @@ function setupPty() {
   });
 
   ipcMain.on("terminal-input", (_, input) => {
+    lastCommand = input.trim(); // Save the last entered command
     ptyProcess.write(input + "\r");
   });
 
@@ -128,3 +142,4 @@ function setupPty() {
     return currentDirectory;
   });
 }
+
