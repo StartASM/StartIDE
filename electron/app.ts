@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import { join } from "path";
+import { setupTerminal } from "./modules/terminal";
 
 let mainWindow: BrowserWindow;
 
@@ -18,8 +19,8 @@ async function main() {
     maximizable: true,
     frame: true,
     webPreferences: {
-      devTools: true || !app.isPackaged, // Enable devtools
-      preload: join(__dirname, "preload.js"), // Preload script
+      devTools: true,
+      preload: join(__dirname, "preload.js"),
     },
   });
 
@@ -34,8 +35,15 @@ async function main() {
     await mainWindow.loadURL(`http://localhost:5173/`);
   }
 
-  mainWindow.once("ready-to-show", mainWindow.show);
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+  });
 
+  setupWindowEvents();
+  setupTerminal(mainWindow);
+}
+
+function setupWindowEvents() {
   mainWindow.on("resize", () => {
     const bounds = mainWindow.getBounds();
     const { width, height } = bounds;
@@ -54,7 +62,6 @@ async function main() {
     mainWindow.webContents.send("window-state", "minimized");
   });
 
-  // Handle custom window control events
   ipcMain.on("window-control", (event, action) => {
     switch (action) {
       case "close":
@@ -67,9 +74,5 @@ async function main() {
         mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
         break;
     }
-  });
-
-  ipcMain.handle("get-version", (_, key: "electron" | "node") => {
-    return String(process.versions[key]);
   });
 }

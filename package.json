@@ -11,7 +11,8 @@
     "build:renderer": "cd renderer && npm run build",
     "dev:renderer": "cd renderer && npm run dev",
     "dev:electron": "npm run build:electron && electron .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "rebuild": "electron-rebuild"
   },
   "build": {
     "appId": "start.ide",
@@ -49,14 +50,18 @@
   "homepage": "https://github.com/tlaceby/electron-svelte#readme",
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "electron": "^28.2.3",
+    "electron": "^19.1.9",
     "electron-builder": "^24.9.1",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "prettier": "^3.2.5",
     "prettier-plugin-svelte": "^3.2.1"
   },
   "dependencies": {
+    "electron-rebuild": "^3.2.9",
     "electron-reload": "^2.0.0-alpha.1",
-    "svelte-portal": "^2.2.1"
+    "nan": "^2.22.0",
+    "node-pty": "^1.0.0",
+    "svelte-portal": "^2.2.1",
+    "xterm-addon-fit": "^0.8.0"
   }
 }

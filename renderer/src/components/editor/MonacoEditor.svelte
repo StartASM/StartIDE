@@ -2,7 +2,7 @@
     import * as monaco from 'monaco-editor';
     import { onMount, onDestroy } from 'svelte';
     import { registerStartASMLanguage } from '../../../lib/monaco-startasm';
-    import { currentLineNumber } from '../../../lib/store';
+    import { currentLineNumber } from '../../../lib/appStore';
 
     export let initialValue = ''; // Initial content for the editor
     export let language = 'startasm'; // Programming language for syntax highlighting
