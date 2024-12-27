@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import { join } from "path";
-import * as pty from "node-pty";
+import { setupTerminal } from "./modules/terminal";
 
 let mainWindow: BrowserWindow;
 
@@ -19,8 +19,8 @@ async function main() {
     maximizable: true,
     frame: true,
     webPreferences: {
-      devTools: true || !app.isPackaged, // Enable devtools
-      preload: join(__dirname, "preload.js"), // Preload script
+      devTools: true,
+      preload: join(__dirname, "preload.js"),
     },
   });
 
@@ -39,7 +39,11 @@ async function main() {
     mainWindow.show();
   });
 
-  // Event handlers for window states
+  setupWindowEvents();
+  setupTerminal(mainWindow);
+}
+
+function setupWindowEvents() {
   mainWindow.on("resize", () => {
     const bounds = mainWindow.getBounds();
     const { width, height } = bounds;
@@ -58,7 +62,6 @@ async function main() {
     mainWindow.webContents.send("window-state", "minimized");
   });
 
-  // Window control events
   ipcMain.on("window-control", (event, action) => {
     switch (action) {
       case "close":
@@ -71,29 +74,5 @@ async function main() {
         mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
         break;
     }
-  });
-
-  setupPty();
-}
-
-function setupPty() {
-  const shell = process.env.SHELL || (process.platform === "win32" ? "powershell.exe" : "bash");
-
-  const ptyProcess = pty.spawn(shell, ["--login"], {
-    name: "xterm-color",
-    cwd: process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, // Use the user's home directory
-    env: {
-      ...process.env, // Spread the current environment
-    },
-  });
-
-  // Send terminal input from the renderer to the pty process
-  ipcMain.on("terminal-input", (event, input: string) => {
-    ptyProcess.write(input);
-  });
-
-  // Send pty process output to the renderer
-  (ptyProcess as any).on("data", (data: string) => {
-    mainWindow?.webContents.send("terminal-output", data);
   });
 }

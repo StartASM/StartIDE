@@ -48,4 +48,4 @@
     }
 </style>
 
-<div id="terminal-container" class="terminal-container"></div>
+<div id="terminal-container" class="terminal-container rounded-b-lg"></div>

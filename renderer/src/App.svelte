@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { editorOpen, terminalOpen } from '../lib/store';
+  import { editorOpen, terminalOpen } from '../lib/appStore';
 
   import EditorWindow from './windows/EditorWindow.svelte';
   import TerminalWindow from './windows/TerminalWindow.svelte';

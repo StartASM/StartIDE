@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentLineNumber } from '../../../lib/store';
+    import { currentLineNumber } from '../../../lib/appStore';
 
     export let leftText: string = 'Files > src > main.sasm';
     export let rightText: string = 'StartASM Version 0.0.1';

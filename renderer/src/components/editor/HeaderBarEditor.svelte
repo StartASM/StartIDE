@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {editorOpen, terminalOpen} from "../../../lib/store";
+    import {editorOpen, terminalOpen} from "../../../lib/appStore";
 
     export let fileName = 'Untitled';
     export let fileExtension = '.file';

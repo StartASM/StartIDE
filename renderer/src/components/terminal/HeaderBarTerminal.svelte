@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {errorTerminalToggled, terminalOpen} from '../../../lib/store';
+    import {errorTerminalToggled, terminalOpen} from '../../../lib/appStore';
 
     const closeWindow = () => {
         terminalOpen.update(() => false);
