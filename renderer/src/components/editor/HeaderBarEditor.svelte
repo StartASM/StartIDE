@@ -1,12 +1,11 @@
 <script lang="ts">
-    import {editorOpen, terminalOpen} from "../../../lib/appStore";
+    import {editorOpen, consoleOpen} from "../../../lib/appStore";
 
     export let fileName = 'Untitled';
-    export let fileExtension = '.file';
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
-    const terminalMenu = () => terminalOpen.update((current) => !current);
+    const terminalMenu = () => consoleOpen.update((current) => !current);
     const vmMenu = () => alert('Bring up VM screen');
     const fileMenu = () => alert('Bring up file menu');
     const closeWindow = () => editorOpen.update(() => false);

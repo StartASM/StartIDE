@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {errorTerminalToggled, terminalOpen} from '../../../lib/appStore';
+    import {errorTerminalToggled, consoleOpen} from '../../../lib/appStore';
 
     const closeWindow = () => {
-        terminalOpen.update(() => false);
+        consoleOpen.update(() => false);
     };
 
     const toggleError = () => {
@@ -10,7 +10,7 @@
     };
 
     // Get the current state for icon determination
-    $: iconClass = $errorTerminalToggled ? 'bi bi-exclamation-triangle-fill' : 'bi bi-terminal-fill';
+    $: iconClass = $errorTerminalToggled ? 'bi bi-terminal-fill' : 'bi bi-exclamation-triangle-fill';
     $: title = $errorTerminalToggled ? 'Error Log' : 'Terminal';
 </script>
 

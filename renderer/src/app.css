@@ -11,7 +11,7 @@
 /* Background gradient */
 body {
   background-color: #00DBDE;
-  background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(90deg, #085078, #85d8ce);
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
 }

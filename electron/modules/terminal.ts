@@ -33,5 +33,5 @@ export function setupTerminal(mainWindow: BrowserWindow): void {
     setTimeout(() => {
         const clearCommand = process.platform === "win32" ? "cls\r" : "clear\n";
         ptyProcess?.write(clearCommand);
-    }, 1000);
+    }, 1500);
 }

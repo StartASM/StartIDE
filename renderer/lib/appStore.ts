@@ -6,5 +6,5 @@ export const editorOpen = writable(true);
 export const currentLineNumber = writable('');
 
 //Terminal Stores
-export const terminalOpen = writable(false);
-export const errorTerminalToggled = writable(false);
+export const consoleOpen = writable(false);
+export const errorTerminalToggled = writable(true);
