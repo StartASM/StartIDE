@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+// Expose a bridge object to the renderer process
 contextBridge.exposeInMainWorld("bridge", {
   platform: process.platform, // Expose the platform for conditional rendering
 
@@ -15,16 +16,9 @@ contextBridge.exposeInMainWorld("bridge", {
     ipcRenderer.on("window-state", (_, state) => callback(state));
   },
 
-  // Terminal functionality
-  terminal: {
-    sendInput: (input: string) => ipcRenderer.send("terminal-input", input),
-    onOutput: (callback: (output: string) => void) => {
-      ipcRenderer.on("terminal-output", (_, output) => callback(output));
-    },
-    resize: (cols: number, rows: number) => ipcRenderer.send("resize-terminal", { cols, rows }), // Send resize event to main process
+  // Terminal communication
+  sendInput: (input: string) => ipcRenderer.send("terminal-input", input),
+  onOutput: (callback: (data: string) => void) => {
+    ipcRenderer.on("terminal-output", (_, data) => callback(data));
   },
-  getCurrentDirectory: () => ipcRenderer.invoke("get-current-directory"),
-  onDirectoryChanged: (callback: (newDir: string) => void) => {
-    ipcRenderer.on("directory-changed", (_, newDir) => callback(newDir)); // Listen for directory change
-  }
 });

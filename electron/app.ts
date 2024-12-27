@@ -1,20 +1,14 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import { join } from "path";
-import { homedir } from "os";
 import * as pty from "node-pty";
 
 let mainWindow: BrowserWindow;
-let currentDirectory = homedir(); // Start in the user's home directory
-let ptyProcess: pty.IPty; // Node-Pty instance
-let lastCommand = ""; // Keep track of the last command entered by the user.
 
 app.once("ready", main);
 app.setName("StartIDE");
 
 async function main() {
-  console.log("Starting Electron app...");
-
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -30,13 +24,9 @@ async function main() {
     },
   });
 
-  console.log("Main window created.");
-
   if (app.isPackaged) {
-    console.log("Loading packaged app...");
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   } else {
-    console.log("Loading development server...");
     electronReload(join(__dirname), {
       forceHardReset: true,
       hardResetMethod: "quit",
@@ -46,7 +36,6 @@ async function main() {
   }
 
   mainWindow.once("ready-to-show", () => {
-    console.log("Main window ready to show.");
     mainWindow.show();
   });
 
@@ -84,62 +73,27 @@ async function main() {
     }
   });
 
-  ipcMain.handle("get-version", (_, key: "electron" | "node") => {
-    return String(process.versions[key]);
-  });
-
-  ipcMain.handle("get-current-directory", () => {
-    return currentDirectory; // Return the current working directory
-  });
-
-  setupPty(); // Initialize the PTY process
+  setupPty();
 }
 
 function setupPty() {
-  const shell = process.env.SHELL || (process.platform === "win32" ? "cmd.exe" : "/bin/bash");
+  const shell = process.env.SHELL || (process.platform === "win32" ? "powershell.exe" : "bash");
 
-  ptyProcess = pty.spawn(shell, [], {
-    name: "xterm-256color",
-    cols: 80,
-    rows: 24,
-    cwd: currentDirectory,
+  const ptyProcess = pty.spawn(shell, ["--login"], {
+    name: "xterm-color",
+    cwd: process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, // Use the user's home directory
     env: {
-      ...process.env,
-      PATH: process.env.PATH, // Explicitly include PATH
+      ...process.env, // Spread the current environment
     },
   });
 
-  // Attempt to suppress echo for Unix-like shells
-
-  ptyProcess.onData((data) => {
-    console.log("output");
-
-    // Filter out the echoed command
-    const filteredData = data
-        .split('\r')
-        .filter((line) => !lastCommand || !line.includes(lastCommand)) // Remove echoed command
-        .join('\r');
-
-    console.log(filteredData);
-    mainWindow?.webContents.send("terminal-output", filteredData);
-    console.log("end output");
+  // Send terminal input from the renderer to the pty process
+  ipcMain.on("terminal-input", (event, input: string) => {
+    ptyProcess.write(input);
   });
 
-  ptyProcess.onExit(({ exitCode, signal }) => {
-    console.error("PTY process exited.", { exitCode, signal });
-  });
-
-  ipcMain.on("terminal-input", (_, input) => {
-    lastCommand = input.trim(); // Save the last entered command
-    ptyProcess.write(input + "\r");
-  });
-
-  ipcMain.on("resize-terminal", (_, { cols, rows }) => {
-    ptyProcess.resize(cols, rows);
-  });
-
-  ipcMain.handle("get-current-directory", () => {
-    return currentDirectory;
+  // Send pty process output to the renderer
+  (ptyProcess as any).on("data", (data: string) => {
+    mainWindow?.webContents.send("terminal-output", data);
   });
 }
-
