@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld("bridge", {
     onOutput: (callback: (output: string) => void) => {
       ipcRenderer.on("terminal-output", (_, output) => callback(output));
     },
+    resize: (cols: number, rows: number) => ipcRenderer.send("resize-terminal", { cols, rows }), // Send resize event to main process
   },
   getCurrentDirectory: () => ipcRenderer.invoke("get-current-directory"),
   onDirectoryChanged: (callback: (newDir: string) => void) => {

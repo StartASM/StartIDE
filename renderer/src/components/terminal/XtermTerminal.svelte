@@ -7,15 +7,6 @@
     let terminal: Terminal;
     let fitAddon: FitAddon;
     let inputBuffer = ''; // Buffer to store user input
-    let currentDirectory = ''; // Current working directory
-
-    async function fetchCurrentDirectory() {
-        currentDirectory = await window.bridge.getCurrentDirectory();
-    }
-
-    function appendPrompt() {
-        terminal.write(`${currentDirectory} $ `); // Add a prompt with the current directory
-    }
 
     onMount(() => {
         fitAddon = new FitAddon();
@@ -34,15 +25,11 @@
             terminal.open(container);
             fitAddon.fit(); // Resize terminal to fit container
 
-            fetchCurrentDirectory().then(() => {
-                appendPrompt(); // Display the prompt
-            });
-
-            // Handle user input
+            // Listen for terminal input
             terminal.onKey(({ key, domEvent }) => {
                 if (domEvent.key === 'Enter') {
                     const command = inputBuffer.trim();
-                    terminal.writeln(''); // Move to a new line after input
+                    terminal.write('\r'); // Send newline
                     window.bridge.terminal.sendInput(command); // Send input to the backend
                     inputBuffer = ''; // Clear the input buffer
                 } else if (domEvent.key === 'Backspace') {
@@ -58,36 +45,32 @@
 
             // Listen for backend responses
             window.bridge.terminal.onOutput((output: string) => {
-                if (output === '') {
-                    // If the output is an empty string, just append a new prompt without printing anything
-                    appendPrompt();
-                } else {
-                    terminal.writeln(output); // Display the backend output
-                    appendPrompt(); // Add the prompt
-                }
+                terminal.write(output); // Write backend output
             });
 
             // Resize terminal dynamically on window resize
             window.addEventListener('resize', () => {
                 fitAddon.fit();
+                const { cols, rows } = terminal;
+                window.bridge.terminal.resize(cols, rows); // Notify backend of new size
             });
+
+            // Notify backend of initial terminal size
+            const { cols, rows } = terminal;
+            window.bridge.terminal.resize(cols, rows);
         }
     });
-
-    export function write(data: string) {
-        terminal?.writeln(data);
-    }
-
-    export function clear() {
-        terminal?.clear();
-    }
 </script>
 
 <style>
     .terminal-container {
-        overflow: hidden; /* Prevent content from bleeding out */
+        display: flex;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
         position: relative;
+        background-color: #1e1e1e; /* Consistent background color */
     }
 </style>
 
-<div id="terminal-container" class="terminal-container w-full h-full rounded-b-lg"></div>
+<div id="terminal-container" class="terminal-container"></div>
