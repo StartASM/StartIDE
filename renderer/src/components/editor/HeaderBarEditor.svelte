@@ -1,15 +1,21 @@
 <script lang="ts">
-    import {editorOpen, terminalOpen, explorerOpen} from "../../../lib/appStore";
-
-    export let fileName = 'Untitled';
+    import {editorOpen, terminalOpen} from "../../../lib/appStore";
+    import {editorContent, filePath, fileName} from "../../../lib/fileStore";
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
     const terminalMenu = () => terminalOpen.update((current) => !current);
     const vmMenu = () => alert('Bring up VM screen');
-    const fileMenu = () => explorerOpen.update((current) => !current);
     const errorLog = () => alert('Bring up error log');
     const closeWindow = () => editorOpen.update(() => false);
+
+    const openFile = async () => {
+        const fileData = await window.bridge.openFile();
+        if (fileData) {
+            editorContent.set(fileData.content); // Update the editor content
+            filePath.set(fileData.path); // Update the file path
+        }
+    };
 
 </script>
 
@@ -27,7 +33,7 @@
         </div>
 
         <!-- Title -->
-        <div class="text-white font-bold truncate flex-grow">{fileName}</div>
+        <div class="text-white font-bold truncate flex-grow">{$fileName}</div>
     </div>
 
     <div class="flex items-center gap-1">
@@ -70,7 +76,7 @@
                 </button>
                 <button
                         class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
-                        on:click={fileMenu}
+                        on:click={openFile}
                         aria-label="File Menu"
                 >
                     <i class="bi bi-folder-fill"></i>

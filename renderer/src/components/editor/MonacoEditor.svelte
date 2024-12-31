@@ -4,7 +4,8 @@
     import { registerStartASMLanguage } from '../../../lib/monaco-startasm';
     import { currentLineNumber } from '../../../lib/appStore';
 
-    export let initialValue = ''; // Initial content for the editor
+    import { editorContent} from "../../../lib/fileStore";
+
     export let language = 'startasm'; // Programming language for syntax highlighting
     export let theme = 'startasm-theme'; // Monaco editor theme
 
@@ -83,7 +84,7 @@
 
         // Create the Monaco Editor instance
         editor = monaco.editor.create(editorContainer, {
-            value: initialValue,
+            value: '',
             language,
             theme,
             automaticLayout: true,
@@ -105,14 +106,28 @@
                 maxColumn: 100, // Set max width before minimap shows up
             },
         });
+
         editor.onDidChangeCursorSelection((event) => {
             const rangeInfo = calculateLogicalLineRange(event.selection); // Calculate logical line range
             currentLineNumber.set(rangeInfo); // Update the store with the computed range
         });
 
+        // Subscribe to editorContent and update editor's value when it changes
+        const unsubscribe = editorContent.subscribe((content) => {
+            if (editor.getValue() !== content) {
+                editor.setValue(content); // Update the editor's content
+            }
+        });
+
+        // Update the store when the editor content changes
+        editor.onDidChangeModelContent(() => {
+            editorContent.set(editor.getValue());
+        });
+
         // Cleanup on destroy
         onDestroy(() => {
             editor.dispose();
+            unsubscribe();
         });
     });
 </script>

@@ -7,6 +7,3 @@ export const currentLineNumber = writable('');
 
 //Terminal Stores
 export const terminalOpen = writable(false);
-
-//File Explorer Stores
-export const explorerOpen = writable(false);

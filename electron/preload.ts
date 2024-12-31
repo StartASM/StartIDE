@@ -21,4 +21,9 @@ contextBridge.exposeInMainWorld("bridge", {
   onOutput: (callback: (data: string) => void) => {
     ipcRenderer.on("terminal-output", (_, data) => callback(data));
   },
+
+  // File operations
+  openFile: () => ipcRenderer.invoke("dialog:openFile"),
+  saveFile: (content: string, filePath?: string) =>
+      ipcRenderer.invoke("dialog:saveFile", { content, filePath }),
 });
