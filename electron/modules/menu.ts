@@ -1,4 +1,4 @@
-import { Menu, BrowserWindow, MenuItemConstructorOptions, app } from "electron";
+import {Menu, BrowserWindow, MenuItemConstructorOptions, app} from "electron";
 
 export function setupMenu(mainWindow: BrowserWindow) {
     const isMac = process.platform === "darwin";
@@ -8,6 +8,9 @@ export function setupMenu(mainWindow: BrowserWindow) {
             label: "File",
             submenu: [
                 {
+                    label: "New File"
+                },
+                {
                     label: "Open...",
                     accelerator: isMac ? "Cmd+O" : "Ctrl+O", // Add shortcut for Open
                     click: () => {
@@ -15,13 +18,24 @@ export function setupMenu(mainWindow: BrowserWindow) {
                     },
                 },
                 {
+                    label: "Recent Files"
+                },
+                { type: "separator" },
+                { label: "Close Window"},
+                {
                     label: "Save",
                     accelerator: isMac ? "Cmd+S" : "Ctrl+S", // Add shortcut for Save
                     click: () => {
                         mainWindow.webContents.send("menu-save-file");
                     },
                 },
-                {label: "Compile"}
+                {
+                    label: "Save As...",
+                    accelerator: isMac ? "Cmd+Shift+S" : "Ctrl+Shift+S",
+                },
+                {label: "Compile"},
+                { type: "separator" },
+                { label: "Settings..."},
             ],
         },
         {
@@ -40,10 +54,8 @@ export function setupMenu(mainWindow: BrowserWindow) {
         {
             label: "View",
             submenu: [
-                { role: "reload", accelerator: isMac ? "Cmd+R" : "Ctrl+R" },
                 { role: "toggleDevTools", accelerator: isMac ? "Alt+Cmd+I" : "Ctrl+Shift+I" },
                 { type: "separator" },
-                { role: "resetZoom", accelerator: "CmdOrCtrl+0" },
                 { role: "zoomIn", accelerator: "CmdOrCtrl+Plus" },
                 { role: "zoomOut", accelerator: "CmdOrCtrl+-" },
                 { type: "separator" },
@@ -53,7 +65,9 @@ export function setupMenu(mainWindow: BrowserWindow) {
         {
             label: "Terminal",
             submenu: [
-                { label: "Toggle Terminal" },
+                { label: "Toggle Terminal", accelerator: isMac ? "Cmd+T" : "Ctrl+T", click: () => {
+                        mainWindow.webContents.send("menu-toggle-terminal");
+                    },},
                 { label: "Clear Terminal" },
                 { type: "separator" },
                 { label: "Invoke Compiler from CLI "},
@@ -64,12 +78,12 @@ export function setupMenu(mainWindow: BrowserWindow) {
         {
             label: "Breakpoint",
             submenu: [
-                { label: "Create Breakpoint" },
-                { label: "Remove Breakpoint" },
+                { label: "Create Breakpoint", accelerator: isMac ? "Cmd+B" : "Ctrl+B" },
+                { label: "Remove Breakpoint", accelerator: isMac ? "Shift+Cmd+B" : "Shift+Ctrl+B"},
             ]
         },
         {
-            label: "Execute",
+            label: "Run",
             submenu: [
                 { label: "Run File" },
                 { type: "separator" },
@@ -101,12 +115,19 @@ export function setupMenu(mainWindow: BrowserWindow) {
             role: "help",
             submenu: [
                 {
-                    label: "Learn More",
+                    label: "StartIDE Help",
                     click: async () => {
                         const { shell } = require("electron");
-                        await shell.openExternal("https://electronjs.org");
+                        await shell.openExternal("");
                     },
                 },
+                {
+                    label: "StartASM Documentation",
+                    click: async () => {
+                        const {shell} = require("electron");
+                        await shell.openExternal("");
+                    },
+                }
             ],
         },
     ];

@@ -8,7 +8,6 @@
     onMount(() => {
         // Listen for the "menu-open-file" event
         window.bridge.onMenuEvent("menu-open-file", async () => {
-            console.log("Menu Open File Event Received!");
             const fileData = await window.bridge.openFile();
             if (fileData) {
                 editorContent.set(fileData.content); // Update the editor content
@@ -19,10 +18,16 @@
 
         // Listen for the "menu-save-file" event
         window.bridge.onMenuEvent("menu-save-file", async () => {
-            console.log("Menu Save File Event Received!");
             const content = $editorContent; // Get the current editor content
             const path = $filePath; // Get the current file path
             await window.bridge.saveFile(content, path);
+        });
+
+        // Listen for the "menu-toggle-terminal" event
+        window.bridge.onMenuEvent("menu-toggle-terminal", async () => {
+            if ($editorOpen) {
+                terminalOpen.update((current) => !current);
+            }
         });
     });
 </script>
