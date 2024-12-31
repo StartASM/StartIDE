@@ -1,5 +1,7 @@
 import { ipcMain, BrowserWindow } from "electron";
 import * as pty from "node-pty";
+import store from "../lib/appStore";
+import fs from "fs";
 
 let ptyProcess: pty.IPty | null = null;
 
@@ -34,4 +36,22 @@ export function setupTerminal(mainWindow: BrowserWindow): void {
         const clearCommand = process.platform === "win32" ? "cls\r" : "clear\n";
         ptyProcess?.write(clearCommand);
     }, 1000);
+}
+
+export function changeTerminalDirectory(): void {
+    if (!ptyProcess) {
+        console.error("No terminal process available");
+        return;
+    }
+
+    const clearCommand = process.platform === "win32" ? "cls\r" : "clear\n";
+    const newDirectory = store.filePath ? require("path").dirname(store.filePath) : null;
+
+    if (newDirectory && fs.existsSync(newDirectory) && fs.lstatSync(newDirectory).isDirectory()) {
+        // Send clear and cd commands to the terminal
+        ptyProcess.write(`${clearCommand}`);
+        ptyProcess.write(`cd "${newDirectory}"\r`);
+    } else {
+        console.error("Invalid or nonexistent directory:", newDirectory);
+    }
 }
