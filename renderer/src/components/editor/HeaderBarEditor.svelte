@@ -7,7 +7,11 @@
     const terminalMenu = () => terminalOpen.update((current) => !current);
     const vmMenu = () => alert('Bring up VM screen');
     const errorLog = () => alert('Bring up error log');
-    const closeWindow = () => editorOpen.update(() => false);
+    const closeWindow = async () => {
+        editorContent.set('');
+        filePath.set('');
+        editorOpen.update(() => false);
+    }
 
     const openFile = async () => {
         const fileData = await window.bridge.openFile();
@@ -15,11 +19,12 @@
             editorContent.set(fileData.content); // Update the editor content
             filePath.set(fileData.path); // Update the file path
         }
+        editorOpen.update(() => true);
     };
 
 </script>
 
-<div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-60 backdrop-blur-lg rounded-t-lg shadow-md relative">
+<div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-t-lg shadow-md relative">
     <!-- Left section with hamburger menu -->
     <div class="flex items-center gap-3">
         <!-- Hamburger menu -->
