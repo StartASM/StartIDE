@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {editorOpen, terminalOpen} from "../../../lib/appStore";
+    import {editorOpen, terminalOpen, explorerOpen} from "../../../lib/appStore";
 
     export let fileName = 'Untitled';
 
@@ -7,7 +7,7 @@
     const compileFile = () => alert('Compile/export file');
     const terminalMenu = () => terminalOpen.update((current) => !current);
     const vmMenu = () => alert('Bring up VM screen');
-    const fileMenu = () => alert('Bring up file menu');
+    const fileMenu = () => explorerOpen.update((current) => !current);
     const errorLog = () => alert('Bring up error log');
     const closeWindow = () => editorOpen.update(() => false);
 
