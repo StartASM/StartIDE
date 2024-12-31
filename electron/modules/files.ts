@@ -5,6 +5,10 @@ export function setupFileManager(mainWindow: BrowserWindow) {
     ipcMain.handle("dialog:openFile", async () => {
         const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
             properties: ["openFile"],
+            filters: [
+                { name: "StartASM Files", extensions: ["sasm"] }, // Restrict to .sasm files
+                { name: "All Files", extensions: ["*"] }, // Optional: Allow all files as fallback
+            ],
         });
 
         if (canceled || filePaths.length === 0) return null;
