@@ -24,8 +24,9 @@ contextBridge.exposeInMainWorld("bridge", {
 
   // File operations
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
-  saveFile: (content: string, filePath?: string) =>
-      ipcRenderer.invoke("dialog:saveFile", { content, filePath }),
+  saveFile: (content: string, filePath?: string) => ipcRenderer.invoke("dialog:saveFile", { content, filePath }),
+  saveAsFile: (content: string) => ipcRenderer.invoke("dialog:saveAsFile", { content }),
+  newFile: () => ipcRenderer.invoke("file:newFile"),
 
   // Menu communication
   onMenuEvent: (event: string, callback: (...args: any[]) => void) => {

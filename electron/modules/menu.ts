@@ -8,7 +8,11 @@ export function setupMenu(mainWindow: BrowserWindow) {
             label: "File",
             submenu: [
                 {
-                    label: "New File"
+                    label: "New File",
+                    accelerator: isMac ? "Cmd+N" : "Ctrl+N",
+                    click: () => {
+                        mainWindow.webContents.send("menu-new-file");
+                    },
                 },
                 {
                     label: "Open...",
@@ -31,7 +35,10 @@ export function setupMenu(mainWindow: BrowserWindow) {
                 },
                 {
                     label: "Save As...",
-                    accelerator: isMac ? "Cmd+Shift+S" : "Ctrl+Shift+S",
+                    accelerator: isMac ? "Shift+Cmd+S" : "Ctrl+Shift+S",
+                    click: () => {
+                        mainWindow.webContents.send("menu-save-as-file");
+                    },
                 },
                 {label: "Compile"},
                 { type: "separator" },

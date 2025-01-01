@@ -13,15 +13,6 @@
         editorOpen.update(() => false);
     }
 
-    const openFile = async () => {
-        const fileData = await window.bridge.openFile();
-        if (fileData) {
-            editorContent.set(fileData.content); // Update the editor content
-            filePath.set(fileData.path); // Update the file path
-        }
-        editorOpen.update(() => true);
-    };
-
 </script>
 
 <div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-t-lg shadow-md relative">
@@ -78,13 +69,6 @@
                         aria-label="VM Menu"
                 >
                     <i class="bi bi-motherboard-fill"></i>
-                </button>
-                <button
-                        class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
-                        on:click={openFile}
-                        aria-label="File Menu"
-                >
-                    <i class="bi bi-folder-fill"></i>
                 </button>
                 <button
                         class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
