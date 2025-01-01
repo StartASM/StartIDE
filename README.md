@@ -1,7 +1,11 @@
 # StartIDE
 
+
+
 ## Overview
 StartIDE is designed to be the home and main development environment of the StartASM language. Focused on simplicity and beginner friendliness, it provides all the tools needed to write StartASM code in one place. Built with Electron, Svelte and TypeScript.
+
+
 
 ## Usage
 ### Running the Release Version

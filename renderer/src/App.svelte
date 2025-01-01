@@ -14,6 +14,7 @@
                 filePath.set(fileData.path);
             }
             editorOpen.set(true);
+            window.bridge.updateState({ filePath: fileData.path });
         });
 
         window.bridge.onMenuEvent("menu-save-file", async () => {
@@ -32,16 +33,18 @@
                 filePath.set(fileData.path);
                 lastSavedContent.set(fileData.content);
             }
+            window.bridge.updateState({ filePath: fileData.path });
         });
 
         window.bridge.onMenuEvent("menu-new-file", async () => {
-            const newFileData = await window.bridge.newFile();
-            if (newFileData) {
-                editorContent.set(newFileData.content);
-                filePath.set(newFileData.path);
+            const fileData = await window.bridge.newFile();
+            if (fileData) {
+                editorContent.set(fileData.content);
+                filePath.set(fileData.path);
                 editorOpen.set(true);
-                lastSavedContent.set(newFileData.content);
+                lastSavedContent.set(fileData.content);
             }
+            window.bridge.updateState({ filePath: fileData.path });
         });
 
         window.bridge.onMenuEvent("menu-toggle-terminal", async () => {

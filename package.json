@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "electron-reload": "^2.0.0-alpha.1",
+    "fs-extra": "^11.2.0",
     "nan": "^2.22.0",
     "node-pty": "^1.0.0",
     "svelte-portal": "^2.2.1",
