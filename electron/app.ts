@@ -5,6 +5,7 @@ import fs from "fs-extra"; // For file system operations
 import { setupTerminal } from "./modules/terminal";
 import { setupFileManager } from "./modules/files";
 import { setupMenu } from "./modules/menu";
+import { readFileSync } from "fs";
 
 let mainWindow: BrowserWindow;
 const stateFilePath = join(app.getPath("userData"), "appState.json");
@@ -124,6 +125,16 @@ async function loadAppState(): Promise<AppState> {
   }
 }
 
-ipcMain.handle("get-app-state", async () => {
-  return appState; // Return the current appState
+ipcMain.handle("initialize-state", async () => {
+  if (appState.filePath) {
+    try {
+      // Read the file's content
+      const fileContent = readFileSync(appState.filePath, "utf-8");
+      return { content: fileContent, path: appState.filePath };
+    } catch (error) {
+      console.error("Error reading the last opened file:", error);
+      return null; // File might have been deleted or inaccessible
+    }
+  }
+  return null; // No previous file path
 });

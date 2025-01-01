@@ -5,6 +5,20 @@
     import EditorWindow from "./windows/EditorWindow.svelte";
     import TerminalWindow from "./windows/TerminalWindow.svelte";
 
+
+    (async () => {
+        // Fetch the initial state from the main process
+        const initialState = await window.bridge.initializeState();
+
+        if (initialState) {
+            // Update Svelte stores with the loaded file's data
+            editorContent.set(initialState.content);
+            filePath.set(initialState.path);
+            lastSavedContent.set(initialState.content);
+            editorOpen.set(true);// Assume file content is last saved content
+        }
+    })();
+
     onMount(() => {
         window.bridge.onMenuEvent("menu-open-file", async () => {
             const fileData = await window.bridge.openFile();

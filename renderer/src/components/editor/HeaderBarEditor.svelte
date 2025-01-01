@@ -6,6 +6,7 @@
     const compileFile = () => alert('Compile/export file');
     const terminalMenu = () => {
         if ($editorOpen) {terminalOpen.update((current) => !current)}
+        else {alert('Terminal cannot be used without opening a file first.')}
     }
     const vmMenu = () => alert('Bring up VM screen');
     const errorLog = () => alert('Bring up error log');
@@ -34,6 +35,9 @@
                         filePath.set('');
                         terminalOpen.update(() => false);
                         editorOpen.update(() => false);
+
+                        // Update the appState in the main process
+                        await window.bridge.updateState({ filePath: '' });
                     } else {
                         console.log("File save failed. Not closing the window.");
                     }
@@ -43,6 +47,9 @@
                     filePath.set('');
                     terminalOpen.update(() => false);
                     editorOpen.update(() => false);
+
+                    // Update the appState in the main process
+                    await window.bridge.updateState({ filePath: '' });
                 }
             } else {
                 // No unsaved changes, close the editor directly
@@ -50,9 +57,11 @@
                 filePath.set('');
                 terminalOpen.update(() => false);
                 editorOpen.update(() => false);
+
+                // Update the appState in the main process
+                await window.bridge.updateState({ filePath: '' });
             }
         }
-
     };
 </script>
 

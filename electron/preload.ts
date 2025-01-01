@@ -18,8 +18,7 @@ contextBridge.exposeInMainWorld("bridge", {
 
   // State management
   updateState: (newState: Partial<{ filePath?: string }>) => ipcRenderer.invoke("update-state", newState),
-  // Fetch the initial state
-  getAppState: () => ipcRenderer.invoke("get-app-state"),
+  initializeState: () => ipcRenderer.invoke("initialize-state"),
 
   // Terminal communication
   sendInput: (input: string) => ipcRenderer.send("terminal-input", input),
