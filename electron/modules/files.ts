@@ -59,7 +59,7 @@ export function setupFileManager(mainWindow: BrowserWindow) {
         store.filePath = filePath;
 
         writeFileSync(filePath, content, "utf-8");
-        return true;
+        return content;
     });
 
     ipcMain.handle("dialog:saveAsFile", async (event, { content }) => {
@@ -82,7 +82,7 @@ export function setupFileManager(mainWindow: BrowserWindow) {
         // Update the file path in the store
         store.filePath = savePath;
 
-        return {path: savePath};
+        return {path: savePath, data: content};
     });
 
     ipcMain.handle("getCurrentFilePath", () => {

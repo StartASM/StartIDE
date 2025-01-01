@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { editorOpen, terminalOpen } from "../lib/appStore";
-    import { editorContent, filePath } from "../lib/fileStore";
+    import {editorContent, filePath, lastSavedContent} from "../lib/fileStore";
     import EditorWindow from "./windows/EditorWindow.svelte";
     import TerminalWindow from "./windows/TerminalWindow.svelte";
 
@@ -10,6 +10,7 @@
             const fileData = await window.bridge.openFile();
             if (fileData) {
                 editorContent.set(fileData.content);
+                lastSavedContent.set(fileData.content);
                 filePath.set(fileData.path);
             }
             editorOpen.set(true);
@@ -18,25 +19,28 @@
         window.bridge.onMenuEvent("menu-save-file", async () => {
             const content = $editorContent;
             const path = $filePath;
-            await window.bridge.saveFile(content, path);
+            const fileData = await window.bridge.saveFile(content, path);
+            if (fileData) {
+                lastSavedContent.set(fileData.content);
+            }
         });
 
         window.bridge.onMenuEvent("menu-save-as-file", async () => {
-            console.log("Save As Event Received!");
             const content = $editorContent; // Current editor content
             const fileData = await window.bridge.saveAsFile(content);
             if (fileData) {
                 filePath.set(fileData.path);
+                lastSavedContent.set(fileData.content);
             }
         });
 
         window.bridge.onMenuEvent("menu-new-file", async () => {
-            console.log("New File Event Received!");
             const newFileData = await window.bridge.newFile();
             if (newFileData) {
                 editorContent.set(newFileData.content);
                 filePath.set(newFileData.path);
                 editorOpen.set(true);
+                lastSavedContent.set(newFileData.content);
             }
         });
 
@@ -51,7 +55,7 @@
 
 <div class="flex flex-col h-screen">
     <EditorWindow />
-    {#if $terminalOpen && $editorOpen}
+    {#if $terminalOpen}
         <TerminalWindow />
     {/if}
 </div>

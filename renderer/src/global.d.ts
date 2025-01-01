@@ -11,7 +11,6 @@ declare global {
             sendInput: (input: string) => void;
             onOutput: (callback: (data: string) => void) => void;
             openFile: () => Promise<{ content: string; path: string }>;
-            saveFile: (content: string, filePath?: string) => Promise<void>;
             onMenuEvent: (event: string, callback: (...args: any[]) => void) => void;
         };
     }

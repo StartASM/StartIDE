@@ -1,18 +1,59 @@
 <script lang="ts">
     import {editorOpen, terminalOpen} from "../../../lib/appStore";
-    import {editorContent, filePath, fileName} from "../../../lib/fileStore";
+    import {editorContent, filePath, fileName, isFileModified, lastSavedContent} from "../../../lib/fileStore";
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
-    const terminalMenu = () => terminalOpen.update((current) => !current);
+    const terminalMenu = () => {
+        if ($editorOpen) {terminalOpen.update((current) => !current)}
+    }
     const vmMenu = () => alert('Bring up VM screen');
     const errorLog = () => alert('Bring up error log');
-    const closeWindow = async () => {
-        editorContent.set('');
-        filePath.set('');
-        editorOpen.update(() => false);
-    }
 
+    const closeWindow = async () => {
+        if ($editorOpen) {
+            if ($isFileModified) {
+                // If there are unsaved changes, show a confirmation dialog
+                const saveChanges = window.confirm(
+                    "You have unsaved changes. Would you like to save before closing?"
+                );
+
+                if (saveChanges) {
+                    const content = $editorContent;
+                    const path = $filePath;
+
+                    // Trigger save operation
+                    const success = await window.bridge.saveFile(content, path);
+
+                    if (success) {
+                        // Update lastSavedContent to match current content
+                        lastSavedContent.set(success.content);
+
+                        // Proceed to close the editor
+                        editorContent.set('StartIDE 0.0.1 \nOpen an existing file: Ctrl+O or Cmd+O \nCreate a new file: Ctrl+N or Cmd+N');
+                        filePath.set('');
+                        terminalOpen.update(() => false);
+                        editorOpen.update(() => false);
+                    } else {
+                        console.log("File save failed. Not closing the window.");
+                    }
+                } else {
+                    // User chose not to save, just close the editor
+                    editorContent.set('StartIDE 0.0.1 \nOpen an existing file: Ctrl+O or Cmd+O \nCreate a new file: Ctrl+N or Cmd+N');
+                    filePath.set('');
+                    terminalOpen.update(() => false);
+                    editorOpen.update(() => false);
+                }
+            } else {
+                // No unsaved changes, close the editor directly
+                editorContent.set('StartIDE 0.0.1 \nOpen an existing file: Ctrl+O or Cmd+O \nCreate a new file: Ctrl+N or Cmd+N');
+                filePath.set('');
+                terminalOpen.update(() => false);
+                editorOpen.update(() => false);
+            }
+        }
+
+    };
 </script>
 
 <div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-t-lg shadow-md relative">
