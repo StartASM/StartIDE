@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import electronReload from "electron-reload";
 import { join } from "path";
 import { setupTerminal } from "./modules/terminal";
+import { setupFileManager } from "./modules/files";
+import { setupMenu } from "./modules/menu";
 
 let mainWindow: BrowserWindow;
 
@@ -41,6 +43,8 @@ async function main() {
 
   setupWindowEvents();
   setupTerminal(mainWindow);
+  setupFileManager(mainWindow);
+  setupMenu(mainWindow);
 }
 
 function setupWindowEvents() {

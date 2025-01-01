@@ -1,19 +1,62 @@
 <script lang="ts">
     import {editorOpen, terminalOpen} from "../../../lib/appStore";
-
-    export let fileName = 'Untitled';
+    import {editorContent, filePath, fileName, isFileModified, lastSavedContent} from "../../../lib/fileStore";
 
     const runFile = () => alert('Run file');
     const compileFile = () => alert('Compile/export file');
-    const terminalMenu = () => terminalOpen.update((current) => !current);
+    const terminalMenu = () => {
+        if ($editorOpen) {terminalOpen.update((current) => !current)}
+    }
     const vmMenu = () => alert('Bring up VM screen');
-    const fileMenu = () => alert('Bring up file menu');
     const errorLog = () => alert('Bring up error log');
-    const closeWindow = () => editorOpen.update(() => false);
 
+    const closeWindow = async () => {
+        if ($editorOpen) {
+            if ($isFileModified) {
+                // If there are unsaved changes, show a confirmation dialog
+                const saveChanges = window.confirm(
+                    "You have unsaved changes. Would you like to save before closing?"
+                );
+
+                if (saveChanges) {
+                    const content = $editorContent;
+                    const path = $filePath;
+
+                    // Trigger save operation
+                    const success = await window.bridge.saveFile(content, path);
+
+                    if (success) {
+                        // Update lastSavedContent to match current content
+                        lastSavedContent.set(success.content);
+
+                        // Proceed to close the editor
+                        editorContent.set('StartIDE 0.0.1 \nOpen an existing file: Ctrl+O or Cmd+O \nCreate a new file: Ctrl+N or Cmd+N');
+                        filePath.set('');
+                        terminalOpen.update(() => false);
+                        editorOpen.update(() => false);
+                    } else {
+                        console.log("File save failed. Not closing the window.");
+                    }
+                } else {
+                    // User chose not to save, just close the editor
+                    editorContent.set('StartIDE 0.0.1 \nOpen an existing file: Ctrl+O or Cmd+O \nCreate a new file: Ctrl+N or Cmd+N');
+                    filePath.set('');
+                    terminalOpen.update(() => false);
+                    editorOpen.update(() => false);
+                }
+            } else {
+                // No unsaved changes, close the editor directly
+                editorContent.set('StartIDE 0.0.1 \nOpen an existing file: Ctrl+O or Cmd+O \nCreate a new file: Ctrl+N or Cmd+N');
+                filePath.set('');
+                terminalOpen.update(() => false);
+                editorOpen.update(() => false);
+            }
+        }
+
+    };
 </script>
 
-<div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-60 backdrop-blur-lg rounded-t-lg shadow-md relative">
+<div class="flex items-center justify-between p-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-t-lg shadow-md relative">
     <!-- Left section with hamburger menu -->
     <div class="flex items-center gap-3">
         <!-- Hamburger menu -->
@@ -27,7 +70,7 @@
         </div>
 
         <!-- Title -->
-        <div class="text-white font-bold truncate flex-grow">{fileName}</div>
+        <div class="text-white font-bold truncate flex-grow">{$fileName}</div>
     </div>
 
     <div class="flex items-center gap-1">
@@ -67,13 +110,6 @@
                         aria-label="VM Menu"
                 >
                     <i class="bi bi-motherboard-fill"></i>
-                </button>
-                <button
-                        class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
-                        on:click={fileMenu}
-                        aria-label="File Menu"
-                >
-                    <i class="bi bi-folder-fill"></i>
                 </button>
                 <button
                         class="btn btn-sm btn-square bg-gray-800 bg-opacity-40 backdrop-blur-lg hover:scale-105 focus:outline focus:outline-white hover:outline hover:outline-white transition-transform"
